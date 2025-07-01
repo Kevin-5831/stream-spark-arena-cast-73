@@ -68,30 +68,34 @@ const VideoPreview = ({ isStreaming, activeSource }: VideoPreviewProps) => {
         )}
         
         {/* Draggable Zoom Slider - Right Edge */}
-        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 z-20">
+        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20">
           <div 
             ref={sliderRef}
-            className="w-1.5 h-30 bg-white rounded-full relative"
-            style={{ height: '120px', width: '6px' }}
+            className="bg-white rounded-sm relative"
+            style={{ height: '120px', width: '6px', borderRadius: '3px' }}
           >
-            {/* Center Dot */}
+            {/* Black Center Line */}
             <div 
-              className="absolute w-2 h-2 bg-black rounded-full left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
-              style={{ width: '8px', height: '8px' }}
+              className="absolute bg-black left-1/2 transform -translate-x-1/2"
+              style={{ 
+                width: '1px', 
+                height: '120px',
+                top: '0'
+              }}
             />
             
             {/* Draggable Search Icon */}
             <div
               {...bind()}
-              className="absolute w-8 h-8 bg-black/60 rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing left-1/2 transform -translate-x-1/2 touch-none"
+              className="absolute bg-black/60 rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing left-1/2 transform -translate-x-1/2 touch-none"
               style={{ 
                 top: `${sliderPosition * 100}%`, 
                 transform: 'translateX(-50%) translateY(-50%)',
-                width: '32px',
-                height: '32px'
+                width: '24px',
+                height: '24px'
               }}
             >
-              <Search className="w-4 h-4 text-white" />
+              <Search className="w-3 h-3 text-white" />
             </div>
           </div>
         </div>
