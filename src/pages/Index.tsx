@@ -1,6 +1,6 @@
 
-import { useState } from 'react';
-import { Camera, Clock, Menu, Download } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Camera, Clock, Menu, Download, Mic } from 'lucide-react';
 import SourceCard from '../components/SourceCard';
 import ShortcutButton from '../components/ShortcutButton';
 import MonitoringIndicator from '../components/MonitoringIndicator';
@@ -15,6 +15,18 @@ const Index = () => {
     fps: '30fps',
     audioLevel: 75
   });
+
+  // Realistic audio level animation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStats(prev => ({
+        ...prev,
+        audioLevel: Math.floor(Math.random() * 40) + 50 // Random between 50-90%
+      }));
+    }, 100);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   const sources = [
     { id: 0, name: 'CAMERA CELULAR', isActive: true },
@@ -103,18 +115,32 @@ const Index = () => {
       {/* Bottom Section */}
       <div className="border-t border-slate-700 p-4 relative">
         {/* Audio Monitoring Widget - Left Side */}
-        <div className="absolute bottom-5 left-5 w-48">
-          <div className="mb-2">
-            <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clipRule="evenodd" />
-            </svg>
+        <div className="absolute bottom-5 left-5">
+          {/* Microphone Icon and Audio Bar on Same Line */}
+          <div className="flex items-center gap-2 mb-2">
+            <Mic className="w-4 h-4 text-green-400" />
+            <div 
+              className="rounded-full relative overflow-hidden"
+              style={{ 
+                width: '120px', 
+                height: '6px',
+                background: 'linear-gradient(to right, #ef4444, #eab308, #22c55e)'
+              }}
+            >
+              <div 
+                className="h-full bg-slate-700 absolute right-0"
+                style={{ 
+                  width: `${100 - stats.audioLevel}%`,
+                  transition: 'width 0.1s ease-out'
+                }}
+              />
+            </div>
           </div>
-          <div className="h-2 bg-slate-700 rounded-full mb-2">
-            <div className="h-full w-3/4 bg-green-400 rounded-full"></div>
-          </div>
-          <div className="text-xs text-white space-y-1">
-            <div>Monitoramento de taxa de upload: {stats.bitrate}</div>
-            <div>Monitoramento de frames: {stats.fps}</div>
+          
+          {/* Stats on Same Line */}
+          <div className="flex justify-between text-white" style={{ fontSize: '10px', width: '120px', marginLeft: '24px' }}>
+            <span>{stats.bitrate}</span>
+            <span>{stats.fps}</span>
           </div>
         </div>
 
