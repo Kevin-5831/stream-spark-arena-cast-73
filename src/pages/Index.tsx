@@ -23,14 +23,6 @@ const Index = () => {
     { id: 3, name: 'XXXX', isActive: false }
   ];
 
-  const shortcuts = [
-    { icon: Camera, label: 'Profile' },
-    { icon: Clock, label: 'Timer' },
-    { icon: Menu, label: 'FX' },
-    { icon: Download, label: 'Download' },
-    { icon: Menu, label: 'Menu' }
-  ];
-
   const handleSourceSelect = (sourceId: number) => {
     setActiveSource(sourceId);
   };
@@ -47,15 +39,37 @@ const Index = () => {
           <h2 className="text-sm text-gray-400 mb-3">
             Botões de atalho personalizáveis com informação se está no ar ou offline
           </h2>
-          <div className="flex justify-center gap-4">
-            {shortcuts.map((shortcut, index) => (
+          {/* Fixed Header Layout: 1 button left + 4 buttons right */}
+          <div className="flex justify-between items-center">
+            <div>
               <ShortcutButton
-                key={index}
-                icon={shortcut.icon}
-                label={shortcut.label}
+                icon={Camera}
+                label="Profile"
                 isActive={isStreaming}
               />
-            ))}
+            </div>
+            <div className="flex gap-4">
+              <ShortcutButton
+                icon={Clock}
+                label="Timer"
+                isActive={isStreaming}
+              />
+              <ShortcutButton
+                icon={Menu}
+                label="FX"
+                isActive={isStreaming}
+              />
+              <ShortcutButton
+                icon={Download}
+                label="Download"
+                isActive={isStreaming}
+              />
+              <ShortcutButton
+                icon={Menu}
+                label="Menu"
+                isActive={isStreaming}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -87,34 +101,29 @@ const Index = () => {
       </div>
 
       {/* Bottom Section */}
-      <div className="border-t border-slate-700 p-4">
-        <div className="flex items-center justify-between">
-          {/* Monitoring Panel */}
-          <div className="flex gap-8">
-            <MonitoringIndicator
-              label="Monitoramento de áudio"
-              value={`${stats.audioLevel}%`}
-              isActive={isStreaming}
-            />
-            <MonitoringIndicator
-              label="Monitoramento de frames"
-              value={stats.fps}
-              isActive={isStreaming}
-            />
-            <MonitoringIndicator
-              label="Monitoramento de taxa de upload"
-              value={stats.bitrate}
-              isActive={isStreaming}
-            />
+      <div className="border-t border-slate-700 p-4 relative">
+        {/* Audio Monitoring Widget - Left Side */}
+        <div className="absolute bottom-5 left-5 w-48">
+          <div className="mb-2">
+            <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clipRule="evenodd" />
+            </svg>
           </div>
+          <div className="h-2 bg-slate-700 rounded-full mb-2">
+            <div className="h-full w-3/4 bg-green-400 rounded-full"></div>
+          </div>
+          <div className="text-xs text-white space-y-1">
+            <div>Monitoramento de taxa de upload: {stats.bitrate}</div>
+            <div>Monitoramento de frames: {stats.fps}</div>
+          </div>
+        </div>
 
-          {/* Stream Control Button */}
-          <div className="flex-1 max-w-md ml-8">
-            <StreamButton
-              isStreaming={isStreaming}
-              onToggle={handleStreamToggle}
-            />
-          </div>
+        {/* Centered Stream Control Button */}
+        <div className="flex justify-center">
+          <StreamButton
+            isStreaming={isStreaming}
+            onToggle={handleStreamToggle}
+          />
         </div>
       </div>
     </div>
