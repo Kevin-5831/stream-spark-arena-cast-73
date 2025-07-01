@@ -13,23 +13,28 @@ const VideoPreview = ({ isStreaming, activeSource }: VideoPreviewProps) => {
   const [zoom, setZoom] = useState(1);
   const [sliderPosition, setSliderPosition] = useState(0.5); // 0 to 1
   const sliderRef = useRef<HTMLDivElement>(null);
+  const initialPositionRef = useRef(0.5);
 
-  const bind = useDrag(({ offset: [, y], memo = sliderPosition }) => {
-    if (!sliderRef.current) return memo;
-    
-    const sliderHeight = 120;
-    const newPosition = Math.max(0, Math.min(1, (y + memo * sliderHeight) / sliderHeight));
-    setSliderPosition(newPosition);
-    
-    // Convert slider position to zoom (inverted: top = zoom in, bottom = zoom out)
-    const newZoom = 0.5 + (1 - newPosition) * 1.5; // Range from 0.5x to 2x
-    setZoom(newZoom);
-    
-    return newPosition;
-  }, {
-    bounds: { top: 0, bottom: 120 },
-    from: () => [0, sliderPosition * 120]
-  });
+  const bind = useDrag(
+    ({ movement: [, my], first }) => {
+      if (first) {
+        initialPositionRef.current = sliderPosition;
+      }
+      
+      const sliderHeight = 120;
+      const newPosition = Math.max(0, Math.min(1, initialPositionRef.current + my / sliderHeight));
+      
+      setSliderPosition(newPosition);
+      
+      // Convert slider position to zoom (inverted: top = zoom in, bottom = zoom out)
+      const newZoom = 0.5 + (1 - newPosition) * 1.5; // Range from 0.5x to 2x
+      setZoom(newZoom);
+    },
+    {
+      axis: 'y',
+      bounds: { top: -60, bottom: 60 }
+    }
+  );
 
   return (
     <div className="h-full bg-slate-800 rounded-lg relative overflow-hidden">
