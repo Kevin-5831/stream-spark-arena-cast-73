@@ -1,15 +1,17 @@
-
 import { useState, useEffect } from 'react';
-import { Camera, Clock, Menu, Download, Mic } from 'lucide-react';
+import { Camera, Menu, ReplyIcon, Mic } from 'lucide-react';
 import SourceCard from '../components/SourceCard';
 import ShortcutButton from '../components/ShortcutButton';
-import MonitoringIndicator from '../components/MonitoringIndicator';
 import StreamButton from '../components/StreamButton';
 import VideoPreview from '../components/VideoPreview';
+import QuickAccessMenu from '../components/QuickAccessMenu';
+import ProModeMenu from '../components/ProModeMenu';
 
 const Index = () => {
   const [isStreaming, setIsStreaming] = useState(false);
   const [activeSource, setActiveSource] = useState(0);
+  const [isQuickAccessOpen, setIsQuickAccessOpen] = useState(false);
+  const [isProModeOpen, setIsProModeOpen] = useState(false);
   const [stats, setStats] = useState({
     bitrate: '6000kbps',
     fps: '30fps',
@@ -23,16 +25,16 @@ const Index = () => {
         ...prev,
         audioLevel: Math.floor(Math.random() * 40) + 50 // Random between 50-90%
       }));
-    }, 100);
+    }, 2000);
     
     return () => clearInterval(interval);
   }, []);
 
   const sources = [
     { id: 0, name: 'CAMERA CELULAR', isActive: true },
-    { id: 1, name: 'CAMERA USB', isActive: false },
-    { id: 2, name: 'NAVEGADOR WEB - SINGULAR', isActive: false },
-    { id: 3, name: 'XXXX', isActive: false }
+    { id: 1, name: 'CAMERA USB', isActive: true },
+    { id: 2, name: 'NAVEGADOR WEB - SINGULAR', isActive: true },
+    { id: 3, name: 'XXXX', isActive: true }
   ];
 
   const handleSourceSelect = (sourceId: number) => {
@@ -43,44 +45,69 @@ const Index = () => {
     setIsStreaming(!isStreaming);
   };
 
+  const handleQuickAccessToggle = () => {
+    setIsQuickAccessOpen(!isQuickAccessOpen);
+    setIsProModeOpen(false);
+  };
+
+  const handleProModeOpen = () => {
+    setIsQuickAccessOpen(false);
+    setIsProModeOpen(true);
+  };
+
+  const handleProModeClose = () => {
+    setIsProModeOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-slate-900 text-white flex flex-col">
       {/* Header Section */}
       <div className="p-4 border-b border-slate-700">
         <div className="text-center mb-4">
-          <h2 className="text-sm text-gray-400 mb-3">
-            Botões de atalho personalizáveis com informação se está no ar ou offline
-          </h2>
-          {/* Fixed Header Layout: 1 button left + 4 buttons right */}
-          <div className="flex justify-between items-center">
-            <div>
+          
+          {/* Updated Header Layout: 50% width for left section, 50% width for right section */}
+          <div className="flex">
+            {/* Left Section - 50% width */}
+            <div className="w-1/2 flex justify-start">
               <ShortcutButton
                 icon={Camera}
-                label="Profile"
+                label="User"
                 isActive={isStreaming}
               />
             </div>
-            <div className="flex gap-4">
+            
+            {/* Right Section - 50% width */}
+            <div className="w-1/2 flex justify-between gap-2">
               <ShortcutButton
-                icon={Clock}
-                label="Timer"
+                icon={ReplyIcon}
+                label="Replay"
                 isActive={isStreaming}
               />
               <ShortcutButton
-                icon={Menu}
-                label="FX"
+                icon={Mic}
+                label="Fx"
                 isActive={isStreaming}
               />
               <ShortcutButton
-                icon={Download}
-                label="Download"
+                icon={Mic}
+                label="Standard"
                 isActive={isStreaming}
               />
               <ShortcutButton
-                icon={Menu}
-                label="Menu"
+                icon={Camera}
+                label="Standard"
                 isActive={isStreaming}
               />
+              <button
+                onClick={handleQuickAccessToggle}
+                className="flex flex-col items-center gap-1 p-2 hover:bg-slate-800 rounded-lg transition-colors"
+              >
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${
+                  isQuickAccessOpen ? 'bg-green-400' : 'bg-green-500 hover:bg-green-400'
+                }`}>
+                  <Menu className="w-6 h-6 text-slate-900" />
+                </div>
+              </button>
             </div>
           </div>
         </div>
@@ -152,6 +179,18 @@ const Index = () => {
           />
         </div>
       </div>
+
+      {/* Overlay Components */}
+      <QuickAccessMenu
+        isOpen={isQuickAccessOpen}
+        onClose={() => setIsQuickAccessOpen(false)}
+        onProModeClick={handleProModeOpen}
+      />
+      
+      <ProModeMenu
+        isOpen={isProModeOpen}
+        onClose={handleProModeClose}
+      />
     </div>
   );
 };

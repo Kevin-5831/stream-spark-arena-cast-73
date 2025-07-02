@@ -2,7 +2,7 @@
 import { Play, Search } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { useDrag } from '@use-gesture/react';
-import basketballCourtImage from '../assets/basketball-court.jpg';
+import basketballCourtImage from '@/assets/basketball-court.png';
 
 interface VideoPreviewProps {
   isStreaming: boolean;
@@ -21,7 +21,7 @@ const VideoPreview = ({ isStreaming, activeSource }: VideoPreviewProps) => {
         initialPositionRef.current = sliderPosition;
       }
       
-      const sliderHeight = 120;
+      const sliderHeight = 240;
       const newPosition = Math.max(0, Math.min(1, initialPositionRef.current + my / sliderHeight));
       
       setSliderPosition(newPosition);
@@ -32,7 +32,7 @@ const VideoPreview = ({ isStreaming, activeSource }: VideoPreviewProps) => {
     },
     {
       axis: 'y',
-      bounds: { top: -60, bottom: 60 }
+      bounds: { top: -120, bottom: 120 }
     }
   );
 
@@ -77,14 +77,14 @@ const VideoPreview = ({ isStreaming, activeSource }: VideoPreviewProps) => {
           <div 
             ref={sliderRef}
             className="bg-white rounded-sm relative"
-            style={{ height: '120px', width: '6px', borderRadius: '3px' }}
+            style={{ height: '280px', width: '12px', borderRadius: '3px' }}
           >
             {/* Black Center Line */}
             <div 
               className="absolute bg-black left-1/2 transform -translate-x-1/2"
               style={{ 
-                width: '1px', 
-                height: '120px',
+                width: '2px', 
+                height: '280px',
                 top: '0'
               }}
             />
@@ -96,11 +96,11 @@ const VideoPreview = ({ isStreaming, activeSource }: VideoPreviewProps) => {
               style={{ 
                 top: `${sliderPosition * 100}%`, 
                 transform: 'translateX(-50%) translateY(-50%)',
-                width: '24px',
-                height: '24px'
+                width: '27px',
+                height: '27px'
               }}
             >
-              <Search className="w-3 h-3 text-white" />
+              <Search className="w-4 h-4 text-white" />
             </div>
           </div>
         </div>

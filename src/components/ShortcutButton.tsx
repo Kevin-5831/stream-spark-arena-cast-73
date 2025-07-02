@@ -1,6 +1,6 @@
 
 import { LucideIcon } from 'lucide-react';
-
+import { FxIcon, ReplayIcon, UserIcon } from './icons';
 interface ShortcutButtonProps {
   icon: LucideIcon;
   label: string;
@@ -13,9 +13,11 @@ const ShortcutButton = ({ icon: Icon, label, isActive }: ShortcutButtonProps) =>
       <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${
         isActive ? 'bg-green-400' : 'bg-green-500 hover:bg-green-400'
       }`}>
-        <Icon className="w-6 h-6 text-slate-900" />
+        {label === 'Standard' && <Icon className="w-6 h-6 text-slate-900" />}
+        {label === 'Fx' && <FxIcon />}
+        {label === 'Replay' && <ReplayIcon/>}
+        {label ===  'User' && <UserIcon/>}
       </div>
-      <span className="text-xs text-gray-400">{label}</span>
     </button>
   );
 };
